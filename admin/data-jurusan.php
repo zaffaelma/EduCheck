@@ -51,7 +51,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
                 <td>
-                  <a href="../admin/tambah-jurusan.php" class="btn btn-primary">Tambah Jurusan</a>
+                  <a href="../admin/tambah-jurusan.php" class="btn btn-primary">Tambah</a>
                 </td>
               </ol>
             </div><!-- /.col -->
