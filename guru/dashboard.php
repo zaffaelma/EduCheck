@@ -36,6 +36,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet" href="../theme/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="../theme/dist/css/adminlte.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
 
 </head>
 
@@ -69,29 +71,77 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <div class="content">
         <div class="container-fluid">
 
-        <div class="">
-              <a class="btn btn-app bg-secondary">
-                <span class="badge bg-success">1500</span>
-                <i class="fas fa-barcode"></i> Total Siswa
-              </a>
-              <a class="btn btn-app bg-success">
-                <span class="badge bg-purple">891</span>
-                <i class="fas fa-users"></i> Users
-              </a>
-              <a class="btn btn-app bg-danger">
-                <span class="badge bg-teal">67</span>
-                <i class="fas fa-inbox"></i> Orders
-              </a>
-              <a class="btn btn-app bg-warning">
-                <span class="badge bg-info">12</span>
-                <i class="fas fa-envelope"></i> Inbox
-              </a>
-              <a class="btn btn-app bg-info">
-                <span class="badge bg-danger">531</span>
-                <i class="fas fa-heart"></i> Likes
-              </a>
+          <!-- Small boxes (Stat box) -->
+          <div class="row">
+            <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-primary">
+                <div class="inner">
+                  <h3>1400</h3>
+
+                  <p>Hadir</p>
+                </div>
+
+                <div class="icon">
+                  <i class="fas fa-school"></i>
+                </div>
+                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              </div>
             </div>
-            <!-- /.card-body -->
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-success">
+                <div class="inner">
+                  <h3>53</h3>
+
+                  <p>Sakit</p>
+                </div>
+                <div class="icon">
+                  <i class="fas fa-stethoscope"></i>
+                </div>
+                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-info">
+                <div class="inner">
+                  <h3>44</h3>
+
+                  <p>Izin</p>
+                </div>
+                <div class="icon">
+                  <i class="fas fa-envelope"></i>
+                </div>
+                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-danger">
+                <div class="inner">
+                  <h3>16</h3>
+
+                  <p>Alfa</p>
+                </div>
+                <div class="icon">
+                  <i class="fas fa-user-minus"></i>
+                </div>
+                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+            <!-- ./col -->
+          </div>
+          <!-- /.row -->
+           
+          <ion-datetime-button datetime="datetime"></ion-datetime-button>
+
+          <ion-modal>
+            <ion-datetime id="datetime"></ion-datetime>
+          </ion-modal>
         </div>
         <!-- /.container-fluid -->
       </div>

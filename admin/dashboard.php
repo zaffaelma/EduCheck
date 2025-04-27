@@ -73,7 +73,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <div class="row">
           <div class="col-md-3 col-sm-6 col-12">
             <div class="info-box">
-              <span class="info-box-icon bg-info"><i class="far fa-envelope"></i></span>
+              <span class="info-box-icon bg-info"><i class="fas fa-user-tie"></i></span>
 
               <div class="info-box-content">
                 <span class="info-box-text">Jumlah Guru BK</span>
@@ -86,7 +86,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <!-- /.col -->
           <div class="col-md-3 col-sm-6 col-12">
             <div class="info-box">
-              <span class="info-box-icon bg-success"><i class="far fa-flag"></i></span>
+              <span class="info-box-icon bg-success"><i class="fas fa-school"></i></span>
 
               <div class="info-box-content">
                 <span class="info-box-text">Jumlah Jurusan</span>
@@ -99,7 +99,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <!-- /.col -->
           <div class="col-md-3 col-sm-6 col-12">
             <div class="info-box">
-              <span class="info-box-icon bg-warning"><i class="far fa-copy"></i></span>
+              <span class="info-box-icon bg-secondary"><i class="fas fa-book"></i></span>
 
               <div class="info-box-content">
                 <span class="info-box-text">Jumlah Kelas</span>
@@ -112,7 +112,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <!-- /.col -->
           <div class="col-md-3 col-sm-6 col-12">
             <div class="info-box">
-              <span class="info-box-icon bg-danger"><i class="far fa-star"></i></span>
+              <span class="info-box-icon bg-primary"><i class="fas fa-user-graduate"></i></span>
 
               <div class="info-box-content">
                 <span class="info-box-text">Jumlah Siswa</span>
