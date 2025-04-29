@@ -116,7 +116,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
               <div class="info-box-content">
                 <span class="info-box-text">Jumlah Siswa</span>
-                <span class="info-box-number">1.500</span>
+                <span class="info-box-number">2.500</span>
               </div>
               <!-- /.info-box-content -->
             </div>
