@@ -82,6 +82,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       <option>TAV</option>
                     </select>
                   </div>
+                  <div class="form-group">
+                    <label>Nomor Kelas</label>
+                    <select class="custom-select">
+                      <option>1</option>
+                      <option>2</option>
+                      <option>3</option>
+                      <option>4</option>
+                      <option>5</option>
+                    </select>
+                  </div>
                 </div>
                 <!-- /.card-body -->
 
