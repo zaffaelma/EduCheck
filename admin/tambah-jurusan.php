@@ -1,5 +1,6 @@
 <?php
 session_start();
+<<<<<<< HEAD
 $email = $_SESSION['email'];
 if (!isset($email)){
   header("Location:login.php");
@@ -22,6 +23,10 @@ if (isset($_POST['submit'])) {
   echo "<pre>";
   print_r($_POST);
   echo "</pre>";
+=======
+if (!isset($_SESSION['email']) || $_SESSION['role'] != 'admin') {
+  header("Location: login.php");
+>>>>>>> 6c6a408cf618b5e4192c6fe45843db72acea1a7d
   exit;
 }
 ?>

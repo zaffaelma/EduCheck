@@ -1,14 +1,7 @@
 <?php
 session_start();
-$email = $_SESSION['email'];
-if (!isset($email)){
-  header("Location:login.php");
-  exit;
-}
-
-$email = $_SESSION['email'];
-if ($_SESSION['role'] != 'guru'){
-  header("Location:login.php");
+if (!isset($_SESSION['email']) || $_SESSION['role'] != 'guru') {
+  header("Location: login.php");
   exit;
 }
 ?>
@@ -136,12 +129,85 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <!-- ./col -->
           </div>
           <!-- /.row -->
-           
-          <ion-datetime-button datetime="datetime"></ion-datetime-button>
 
-          <ion-modal>
-            <ion-datetime id="datetime"></ion-datetime>
-          </ion-modal>
+          <!-- Form untuk memilih kelas dan tanggal -->
+          <form method="GET" action="">
+            <div class="row mb-4">
+              <div class="col-md-4">
+                <label for="kelas">Pilih Kelas:</label>
+                <select class="form-control" id="kelas" name="kelas" required>
+                  <option value="">-- Pilih Kelas --</option>
+                  <option value="X" <?php echo (isset($_GET['kelas']) && $_GET['kelas'] == 'X') ? 'selected' : ''; ?>>X</option>
+                  <option value="XI" <?php echo (isset($_GET['kelas']) && $_GET['kelas'] == 'XI') ? 'selected' : ''; ?>>XI</option>
+                  <option value="XII" <?php echo (isset($_GET['kelas']) && $_GET['kelas'] == 'XII') ? 'selected' : ''; ?>>XII</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label for="tanggal">Pilih Tanggal:</label>
+                <input type="date" class="form-control" id="tanggal" name="tanggal" value="<?php echo isset($_GET['tanggal']) ? $_GET['tanggal'] : ''; ?>" required>
+              </div>
+              <div class="col-md-4 align-self-end">
+                <button type="submit" class="btn btn-primary btn-block">Tampilkan</button>
+              </div>
+            </div>
+          </form>
+          <!-- Form -->
+
+            <!-- Tabel Riwayat Absensi -->
+            <?php if (isset($_GET['kelas']) && isset($_GET['tanggal'])): ?>
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Absensi Kelas <?php echo htmlspecialchars($_GET['kelas']); ?> - Tanggal <?php echo htmlspecialchars($_GET['tanggal']); ?></h3>
+              </div>
+              <div class="card-body">
+                <table id="riwayat-absensi" class="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                      <th>No</th>
+                      <th>Nama</th>
+                      <th>Kelas</th>
+                      <th>Tanggal</th>
+                      <th>Status</th>
+                      <th>Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php
+                    // Contoh data dummy (ganti dengan data dari database)
+                    $riwayat = [
+                      ['no' => 1, 'nama' => 'John Doe', 'kelas' => 'X', 'tanggal' => '2025-05-01', 'status' => 'Hadir'],
+                      ['no' => 2, 'nama' => 'Jane Smith', 'kelas' => 'XI', 'tanggal' => '2025-05-02', 'status' => 'Sakit'],
+                      ['no' => 3, 'nama' => 'Alice Johnson', 'kelas' => 'XII', 'tanggal' => '2025-05-03', 'status' => 'Izin'],
+                    ];
+
+                    foreach ($riwayat as $row) {
+                      if ($row['kelas'] == $_GET['kelas'] && $row['tanggal'] == $_GET['tanggal']) {
+                        echo "<tr>";
+                        echo "<td>{$row['no']}</td>";
+                        echo "<td>{$row['nama']}</td>";
+                        echo "<td>{$row['kelas']}</td>";
+                        echo "<td>{$row['tanggal']}</td>";
+                        echo "<td>
+                                <form method='POST' action='update-absensi.php'>
+                                  <input type='hidden' name='id' value='{$row['no']}'>
+                                  <select name='status' class='form-control'>
+                                    <option value='Hadir' " . ($row['status'] == 'Hadir' ? 'selected' : '') . ">Hadir</option>
+                                    <option value='Sakit' " . ($row['status'] == 'Sakit' ? 'selected' : '') . ">Sakit</option>
+                                    <option value='Izin' " . ($row['status'] == 'Izin' ? 'selected' : '') . ">Izin</option>
+                                    <option value='Alfa' " . ($row['status'] == 'Alfa' ? 'selected' : '') . ">Alfa</option>
+                                  </select>
+                              </td>";
+                        echo "<td><button type='submit' class='btn btn-success btn-sm'>Simpan</button></form></td>";
+                        echo "</tr>";
+                      }
+                    }
+                    ?>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <?php endif; ?>
+            
         </div>
         <!-- /.container-fluid -->
       </div>

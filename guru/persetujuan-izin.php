@@ -1,10 +1,9 @@
 <?php
 session_start();
-$email = $_SESSION['email'];
-if (!isset($email)){
-  header("Location:login.php");
+if (!isset($_SESSION['email']) || $_SESSION['role'] != 'guru') {
+  header("Location: login.php");
+  exit;
 }
-
 ?>
 
 <!DOCTYPE html>

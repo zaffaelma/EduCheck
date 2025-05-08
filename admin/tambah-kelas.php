@@ -1,8 +1,7 @@
 <?php
 session_start();
-$email = $_SESSION['email'];
-if ($_SESSION['role'] != 'admin'){
-  header("Location:login.php");
+if (!isset($_SESSION['email']) || $_SESSION['role'] != 'admin') {
+  header("Location: login.php");
   exit;
 }
 
@@ -71,7 +70,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <!-- general form elements -->
             <div class="card card-primary">
               <div class="card-header">
-                <h3 class="card-title">Tambah Jurusan</h3>
+                <h3 class="card-title">Tambah Kelas</h3>
               </div>
               <!-- /.card-header -->
               <!-- form start -->
@@ -89,6 +88,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         ?>
                         <option value="<?php echo $row['id']; ?>"><?php echo $row['nama_jurusan']; ?></option>
                       <?php } ?>  
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Nomor Kelas</label>
+                    <select class="custom-select">
+                      <option>1</option>
+                      <option>2</option>
+                      <option>3</option>
+                      <option>4</option>
+                      <option>5</option>
                     </select>
                   </div>
                 </div>

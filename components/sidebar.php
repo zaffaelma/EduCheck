@@ -2,7 +2,8 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-$role = isset($_SESSION['role']) ? $_SESSION['role'] : null; // Ambil role dari session
+$role = isset($_SESSION['role']) ? $_SESSION['role'] : 'Guest';
+$email = isset($_SESSION['email']) ? $_SESSION['email'] : 'Guest';
 ?>
 
 <!-- Main Sidebar Container -->
@@ -155,12 +156,6 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : null; // Ambil role dari 
                     <a href="../siswa/dashboard.php" class="nav-link">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Dashboard</p>
-                    </a>
-                    </li>
-                    <li class="nav-item">
-                    <a href="../siswa/presensi.php" class="nav-link">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p>Persetujuan Izin</p>
                     </a>
                     </li>
                     <li class="nav-item">
