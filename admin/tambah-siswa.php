@@ -5,6 +5,10 @@ if ($_SESSION['role'] != 'admin'){
   header("Location:login.php");
   exit;
 }
+
+include '../database.php'; 
+$kelas = mysqli_query($conn, "SELECT * FROM kelas");
+$jurusan = mysqli_query($conn, "SELECT * FROM jurusan");
 ?>
 
 <!DOCTYPE html>
@@ -70,52 +74,55 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <form>
+              <form action="proses-tambah-siswa.php" method="POST">
                 <div class="card-body">
                     <div class="form-group">
                     <label for="nis">NIS</label>
-                    <input type="text" class="form-control" id="nis" placeholder="Masukkan NIS">
+                    <input type="text" class="form-control" id="nis" name="nis" placeholder="Masukkan NIS" required>
                   </div>
                   <div class="form-group">
                     <label for="nama">Nama</label>
-                    <input type="text" class="form-control" id="nama" placeholder="Masukkan nama">
+                    <input type="text" class="form-control" id="nama" name="nama" placeholder="Masukkan nama" required>
                   </div>
                   <div class="form-group">
                     <label>Jenis Kelamin</label>
-                    <select class="custom-select">
-                      <option>Laki-laki</option>
-                      <option>Perempuan</option>
+                    <select name="jenis_kelamin" class="custom-select" required>
+                    <option value=""></option>
+                      <option value="Laki-laki">Laki-laki</option>
+                      <option value="Perempuan">Perempuan</option>
                     </select>
                   </div>
                   <div class="form-group">
                     <label>Kelas</label>
-                    <select class="custom-select">
-                      <option>XI RPL 1</option>
-                      <option>XI RPL 2</option>
+                    <select name="kelas_id" class="custom-select" required>
+                      <?php while ($k = mysqli_fetch_assoc($kelas)) { ?>
+                      <option value="<?=$k['id'] ?>"><?=$k['nama_kelas']?></option>
+                      <?php } ?>
                     </select>
                   </div>
                   <div class="form-group">
                     <label>Jurusan</label>
-                    <select class="custom-select">
-                      <option>RPL</option>
-                      <option>TAV</option>
+                    <select name="jurusan_id" class="custom-select" required>
+                      <?php while ($j = mysqli_fetch_assoc($jurusan)) { ?>
+                      <option value="<?=$j['id'] ?>"><?=$j['nama_jurusan']?></option>
+                      <?php } ?>
                     </select>
                   </div>
                   <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" class="form-control" id="email" placeholder="Masukkan email">
+                    <input type="email" name="email" class="form-control" id="email" placeholder="Masukkan email" required>
                   </div>
                   <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" class="form-control" id="password" placeholder="Password">
+                    <input type="password" name="password" class="form-control" id="password" placeholder="Password" required>
                   </div>
                 </div>
                 <!-- /.card-body -->
 
                 <div class="card-footer">
                   <button type="submit" class="btn btn-primary">Submit</button>
-                  <button type="submit" class="btn btn-default float-right">Cancel</button>
-                </div>
+                  <a href="data-siswa.php" class="btn btn-default float-right">Cancel</a>
+                  </div>
               </form>
             </div>
             <!-- /.card -->

@@ -5,6 +5,11 @@ if (!isset($email)){
   header("Location:login.php");
 }
 
+include '../database.php'; 
+$query = "SELECT * FROM jurusan";
+$result = mysqli_query($conn, $query);
+
+
 ?>
 
 <!DOCTYPE html>
@@ -96,11 +101,18 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                    </tr>
+                  <?php if (mysqli_num_rows($result) > 0) { ?>
+        <?php while ($row = mysqli_fetch_assoc($result)) { ?>
+          <tr>
+            <td><?php echo $row['id']; ?></td>
+            <td><?php echo $row['nama_jurusan']; ?></td>
+          </tr>
+        <?php } ?>
+      <?php } else { ?>
+        <tr>
+          <td colspan="2">Tidak ada data jurusan.</td>
+        </tr>
+      <?php } ?>
                   </tbody>
                 </table>
               </div>

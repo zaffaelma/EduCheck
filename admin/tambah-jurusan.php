@@ -1,8 +1,27 @@
 <?php
 session_start();
 $email = $_SESSION['email'];
-if ($_SESSION['role'] != 'admin'){
+if (!isset($email)){
   header("Location:login.php");
+}
+
+if (isset($_POST['submit'])) {
+    include '../database.php'; // Koneksi ke database
+
+    $nama_jurusan = mysqli_real_escape_string($conn, $_POST['nama_jurusan']);
+
+    $query = "INSERT INTO jurusan (nama_jurusan) VALUES ('$nama_jurusan')";
+    if (mysqli_query($conn, $query)) {
+      header("Location: data-jurusan.php"); // Redirect ke halaman Data Jurusan
+      exit;
+    } else {
+      echo "Gagal menambahkan jurusan: " . mysqli_error($conn);
+    }
+}
+if (isset($_POST['submit'])) {
+  echo "<pre>";
+  print_r($_POST);
+  echo "</pre>";
   exit;
 }
 ?>
@@ -70,18 +89,18 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <form>
+              <form method="POST" action="">
                 <div class="card-body">
                   <div class="form-group">
-                    <label for="nama">Nama Jurusan</label>
-                    <input type="text" class="form-control" id="nama" placeholder="Masukkan nama jurusan">
+                    <label for="nama_jurusan">Nama Jurusan</label>
+                    <input type="text" class="form-control" id="nama_jurusan" name="nama_jurusan" placeholder="Masukkan nama jurusan" required>
                   </div>
                 </div>
                 <!-- /.card-body -->
 
                 <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Submit</button>
-                  <button type="submit" class="btn btn-default float-right">Cancel</button>
+                  <button type="submit" name="submit" class="btn btn-primary">Submit</button>
+                  <a href="../admin/data-jurusan.php" class="btn btn-default float-right">Cancel</a>
                 </div>
               </form>
             </div>
@@ -127,6 +146,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
     });
   </script>
+
 </body>
 
 </html>

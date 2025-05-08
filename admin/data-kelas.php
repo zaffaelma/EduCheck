@@ -4,8 +4,22 @@ $email = $_SESSION['email'];
 if (!isset($email)){
   header("Location:login.php");
 }
-
 ?>
+<?php
+include '../database.php';
+$query = "SELECT 
+            kelas.id, 
+            kelas.nama_kelas, 
+            jurusan.nama_jurusan,
+            (SELECT COUNT(*) FROM siswa WHERE siswa.kelas_id = kelas.id) AS jumlah_siswa
+          FROM kelas
+          JOIN jurusan ON kelas.jurusan_id = jurusan.id";
+
+$result = mysqli_query($conn, $query);
+$no = 1;
+ ?>
+
+
 
 <!DOCTYPE html>
 <!--
@@ -98,14 +112,32 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                    </tr>
-                  </tbody>
+<?php
+include '../database.php';
+$query = "SELECT 
+            kelas.id, 
+            kelas.nama_kelas, 
+            jurusan.nama_jurusan,
+            (SELECT COUNT(*) FROM siswa WHERE siswa.kelas_id = kelas.id) AS jumlah_siswa
+          FROM kelas
+          JOIN jurusan ON kelas.jurusan_id = jurusan.id";
+
+$result = mysqli_query($conn, $query);
+$no = 1;
+while ($row = mysqli_fetch_assoc($result)) {
+?>
+<tr>
+  <td><?= $no++; ?></td>
+  <td><?= $row['nama_kelas']; ?></td>
+  <td><?= $row['nama_jurusan']; ?></td>
+  <td><?= $row['jumlah_siswa']; ?></td>
+  <td>
+    <a href="#" class="btn btn-sm btn-warning">Edit</a>
+    <a href="#" class="btn btn-sm btn-danger">Hapus</a>
+  </td>
+</tr>
+<?php } ?>
+</tbody>
                 </table>
               </div>
               <!-- /.card-body -->

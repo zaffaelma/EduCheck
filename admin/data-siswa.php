@@ -5,6 +5,15 @@ if (!isset($email)){
   header("Location:login.php");
 }
 
+
+include '../database.php';
+$query = "SELECT siswa.*, kelas.nama_kelas, jurusan.nama_jurusan 
+          FROM siswa 
+          JOIN kelas ON siswa.kelas_id = kelas.id 
+          JOIN jurusan ON siswa.jurusan_id = jurusan.id";
+$result = mysqli_query($conn, $query);
+
+
 ?>
 
 <!DOCTYPE html>
@@ -100,11 +109,21 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                    </tr>
+                    <?php
+                    $no = 1; while ($row = mysqli_fetch_assoc($result)) { ?>
+                      <tr>
+                        <td><?= $no++; ?></td>
+                        <td><?= $row['nis']; ?></td>
+                        <td><?= $row['nama_siswa']; ?></td>
+                        <td><?= $row['nama_kelas']; ?></td>
+                        <td><?= $row['nama_jurusan']; ?></td>
+                        <td><?= $row['email']; ?></td>
+                        <td>
+                          <a href="edit-siswa.php?id=<?php echo $row['id']; ?>" class="btn btn-warning btn-sm">Edit</a>
+                          <a href="hapus-siswa.php?id=<?php echo $row['id']; ?>" class="btn btn-danger btn-sm">Hapus</a>
+                        </td>
+                      </tr>
+                    <?php } ?>
                   </tbody>
                 </table>
               </div>

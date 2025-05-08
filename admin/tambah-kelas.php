@@ -5,6 +5,11 @@ if ($_SESSION['role'] != 'admin'){
   header("Location:login.php");
   exit;
 }
+
+include '../database.php'; // Koneksi ke database
+$query = "SELECT * FROM jurusan";
+$result = mysqli_query($conn, $query);
+
 ?>
 
 <!DOCTYPE html>
@@ -70,26 +75,28 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <form>
+              <form action="proses-tambah-kelas.php" method="post">
                 <div class="card-body">
                   <div class="form-group">
                     <label for="nama">Nama Kelas</label>
-                    <input type="text" class="form-control" id="nama" placeholder="Masukkan nama kelas">
+                    <input type="text" class="form-control" id="nama" name="nama" placeholder="Masukkan nama kelas">
                   </div>
                   <div class="form-group">
-                    <label>Jurusan</label>
-                    <select class="custom-select">
-                      <option>RPL</option>
-                      <option>TAV</option>
+                    <label for="jurusan">Pilih Jurusan</label>
+                    <select class="form-control" id="jurusan" name="jurusan" required>
+                      <option value="">-- Pilih Jurusan --</option>
+                      <?php while ($row = mysqli_fetch_assoc($result)) { 
+                        ?>
+                        <option value="<?php echo $row['id']; ?>"><?php echo $row['nama_jurusan']; ?></option>
+                      <?php } ?>  
                     </select>
                   </div>
                 </div>
                 <!-- /.card-body -->
 
                 <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Submit</button>
-                  <button type="submit" class="btn btn-default float-right">Cancel</button>
-                </div>
+                  <button type="submit" name="submit" class="btn btn-primary">Submit</button>
+                  <a href="data-kelas.php" class="btn btn-default float-right">Cancel</a>                  </div>
               </form>
             </div>
             <!-- /.card -->
