@@ -65,7 +65,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <!-- general form elements -->
             <div class="card card-primary">
               <div class="card-header">
-                <h3 class="card-title">Tambah Jurusan</h3>
+                <h3 class="card-title">Tambah Kelas</h3>
               </div>
               <!-- /.card-header -->
               <!-- form start -->
