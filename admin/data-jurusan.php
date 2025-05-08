@@ -4,15 +4,12 @@ if (!isset($_SESSION['email']) || $_SESSION['role'] != 'admin') {
   header("Location: login.php");
   exit;
 }
-<<<<<<< HEAD
 
 include '../database.php'; 
 $query = "SELECT * FROM jurusan";
 $result = mysqli_query($conn, $query);
 
 
-=======
->>>>>>> 6c6a408cf618b5e4192c6fe45843db72acea1a7d
 ?>
 
 <!DOCTYPE html>
