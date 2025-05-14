@@ -23,6 +23,10 @@ if (isset($_POST['submit'])) {
   echo "<pre>";
   print_r($_POST);
   echo "</pre>";
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8f5b8ea13bf52d7e479046cb1a736dd9ad30a297
 }
 
 ?>
