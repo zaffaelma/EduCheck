@@ -4,6 +4,12 @@ if (!isset($_SESSION['email']) || $_SESSION['role'] != 'admin') {
   header("Location: login.php");
   exit;
 }
+
+include '../database.php'; 
+$query = "SELECT * FROM guru";
+$result = mysqli_query($conn, $query);
+
+
 ?>
 
 <!DOCTYPE html>
@@ -98,15 +104,22 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                    </tr>
-                  </tbody>
+                  <?php 
+                  $no = 1;
+                  while ($row = mysqli_fetch_assoc($result)) : ?>
+                   <tr>
+                     <td><?= $no++; ?></td>
+                     <td><?= htmlspecialchars($row['nama']) ?></td>
+                     <td><?= htmlspecialchars($row['jurusan']) ?></td>
+                     <td><?= htmlspecialchars($row['email']) ?></td>
+                     <td><?= htmlspecialchars($row['jenis_kelamin']) ?></td>
+                     <td>
+                        <a href="edit-guru.php?id=<?= $row['id'] ?>" class="btn btn-sm btn-warning">Edit</a>
+                        <a href="hapus.php?id=<?= $row['id'] ?>&type=guru" class="btn btn-sm btn-danger" onclick="return confirm('Hapus guru ini?')">Hapus</a>
+                     </td>
+                   </tr>
+                 <?php endwhile; ?>
+                 </tbody>
                 </table>
               </div>
               <!-- /.card-body -->

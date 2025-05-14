@@ -4,8 +4,6 @@ if (!isset($_SESSION['email']) || $_SESSION['role'] != 'admin') {
   header("Location: login.php");
   exit;
 }
-<<<<<<< HEAD
-
 
 include '../database.php';
 $query = "SELECT siswa.*, kelas.nama_kelas, jurusan.nama_jurusan 
@@ -15,8 +13,7 @@ $query = "SELECT siswa.*, kelas.nama_kelas, jurusan.nama_jurusan
 $result = mysqli_query($conn, $query);
 
 
-=======
->>>>>>> 6c6a408cf618b5e4192c6fe45843db72acea1a7d
+
 ?>
 
 <!DOCTYPE html>
@@ -122,8 +119,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <td><?= $row['nama_jurusan']; ?></td>
                         <td><?= $row['email']; ?></td>
                         <td>
-                          <a href="edit-siswa.php?id=<?php echo $row['id']; ?>" class="btn btn-warning btn-sm">Edit</a>
-                          <a href="hapus-siswa.php?id=<?php echo $row['id']; ?>" class="btn btn-danger btn-sm">Hapus</a>
+                          <a href="edit-jurusan.php?id=<?php echo $row['id']; ?>" class="btn btn-warning btn-sm">Edit</a>
+                          <a href="hapus.php?id=<?php echo $row['id']; ?>&type=siswa" class="btn btn-danger btn-sm"
+                            onclick="return confirm('Yakin ingin menghapus siswa ini?')">Hapus</a>
                         </td>
                       </tr>
                     <?php } ?>

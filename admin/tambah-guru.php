@@ -69,26 +69,26 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <form>
+              <form action="proses-tambah-guru.php" method="POST">
                 <div class="card-body">
                   <div class="form-group">
                     <label for="nama">Nama</label>
-                    <input type="text" class="form-control" id="nama" placeholder="Masukkan nama">
+                    <input type="text" class="form-control" name="nama" id="nama" placeholder="Masukkan nama">
                   </div>
                   <div class="form-group">
                     <label>Jenis Kelamin</label>
-                    <select class="custom-select">
+                    <select class="custom-select" name="jenis_kelamin" id="jenis_kelamin">
                       <option>Laki-laki</option>
                       <option>Perempuan</option>
                     </select>
                   </div>
                   <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" class="form-control" id="email" placeholder="Masukkan email">
+                    <input type="email" class="form-control" name="email" id="email" placeholder="Masukkan email">
                   </div>
                   <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" class="form-control" id="password" placeholder="Password">
+                    <input type="password" class="form-control" name="password" id="password" placeholder="Password">
                   </div>
                 </div>
                 <!-- /.card-body -->

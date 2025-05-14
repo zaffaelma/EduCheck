@@ -132,8 +132,9 @@ while ($row = mysqli_fetch_assoc($result)) {
   <td><?= $row['nama_jurusan']; ?></td>
   <td><?= $row['jumlah_siswa']; ?></td>
   <td>
-    <a href="#" class="btn btn-sm btn-warning">Edit</a>
-    <a href="#" class="btn btn-sm btn-danger">Hapus</a>
+    <a href="edit-jurusan.php?id=<?php echo $row['id']; ?>" class="btn btn-warning btn-sm">Edit</a>
+    <a href="hapus.php?id=<?php echo $row['id']; ?>&type=kelas" class="btn btn-danger btn-sm"
+     onclick="return confirm('Yakin ingin menghapus kelas ini?')">Hapus</a>
   </td>
 </tr>
 <?php } ?>
