@@ -4,15 +4,12 @@ if (!isset($_SESSION['email']) || $_SESSION['role'] != 'admin') {
   header("Location: login.php");
   exit;
 }
-<<<<<<< HEAD
 
 include '../database.php'; 
 $query = "SELECT * FROM jurusan";
 $result = mysqli_query($conn, $query);
 
 
-=======
->>>>>>> 6c6a408cf618b5e4192c6fe45843db72acea1a7d
 ?>
 
 <!DOCTYPE html>
@@ -105,10 +102,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   </thead>
                   <tbody>
                   <?php if (mysqli_num_rows($result) > 0) { ?>
-        <?php while ($row = mysqli_fetch_assoc($result)) { ?>
+                  <?php while ($row = mysqli_fetch_assoc($result)) { ?>
           <tr>
             <td><?php echo $row['id']; ?></td>
             <td><?php echo $row['nama_jurusan']; ?></td>
+            <td>
+                <a href="edit-jurusan.php?id=<?php echo $row['id']; ?>" class="btn btn-warning btn-sm">Edit</a>
+                <a href="hapus.php?id=<?php echo $row['id']; ?>&type=jurusan" class="btn btn-danger btn-sm"
+                   onclick="return confirm('Yakin ingin menghapus jurusan ini?')">Hapus</a>
+            </td>
           </tr>
         <?php } ?>
       <?php } else { ?>
