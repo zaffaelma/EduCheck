@@ -5,6 +5,11 @@ if (!isset($_SESSION['email']) || $_SESSION['role'] != 'guru') {
   exit;
 }
 
+if (isset($_SESSION['message'])) {
+  echo '<div class="alert alert-info" style="margin:10px;">' . $_SESSION['message'] . '</div>';
+  unset($_SESSION['message']);
+}
+
 include '../test-koneksi.php';
 
 $query = "SELECT 
@@ -20,12 +25,13 @@ $query = "SELECT
           WHERE a.keterangan_absensi IN ('Izin', 'Sakit')
           ORDER BY a.id_absensi DESC";
 
-$result = mysqli_query($koneksi, $query);
+$result = mysqli_query($conn, $query);
 $no = 1;
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -38,6 +44,7 @@ $no = 1;
   <link rel="stylesheet" href="../theme/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
   <link rel="stylesheet" href="../theme/dist/css/adminlte.min.css">
 </head>
+
 <body class="hold-transition sidebar-mini">
   <div class="wrapper">
 
@@ -101,12 +108,26 @@ $no = 1;
                             </td>
                             <td>
                               <?php if ($row['status_absensi'] == 'Pending') { ?>
-                                <a href="setujui.php?id=<?= $row['id_absensi'] ?>&aksi=setuju" class="btn btn-success btn-sm"><i class="fas fa-check"></i></a>
-                                <a href="setujui.php?id=<?= $row['id_absensi'] ?>&aksi=tolak" class="btn btn-danger btn-sm"><i class="fas fa-times"></i></a>
+                                <form method="post" action="setujui.php" style="display:inline;">
+                                  <input type="hidden" name="id" value="<?= $row['id_absensi'] ?>">
+                                  <input type="hidden" name="aksi" value="setuju">
+                                  <button type="submit" class="btn btn-success btn-sm" title="Setujui">
+                                    <i class="fas fa-check"></i>
+                                  </button>
+                                </form>
+
+                                <form method="post" action="setujui.php" style="display:inline;">
+                                  <input type="hidden" name="id" value="<?= $row['id_absensi'] ?>">
+                                  <input type="hidden" name="aksi" value="tolak">
+                                  <button type="submit" class="btn btn-danger btn-sm" title="Tolak">
+                                    <i class="fas fa-times"></i>
+                                  </button>
+                                </form>
                               <?php } else { ?>
-                                <?= $row['status_absensi'] ?>
+                                <?= htmlspecialchars($row['status_absensi']) ?>
                               <?php } ?>
                             </td>
+
                           </tr>
                         <?php } ?>
                       </tbody>
@@ -133,4 +154,5 @@ $no = 1;
   <script src="../theme/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
   <script src="../theme/dist/js/adminlte.min.js"></script>
 </body>
+
 </html>

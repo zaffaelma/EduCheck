@@ -1,8 +1,10 @@
 <?php
 include 'database.php';
 
+$koneksi = $conn; 
+
 if ($conn) {
-    echo "Koneksi berhasil!";
+    echo "";
 } else {
     echo "Koneksi gagal!";
 }
