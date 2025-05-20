@@ -30,6 +30,3 @@ if ($id && in_array($aksi, ['setuju', 'tolak'])) {
 header("Location: persetujuan-izin.php");
 exit;
 ?>
-
-
-//belom zaf
