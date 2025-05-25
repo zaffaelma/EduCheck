@@ -4,152 +4,103 @@ if (!isset($_SESSION['email']) || $_SESSION['role'] != 'admin') {
   header("Location: login.php");
   exit;
 }
+include '../database.php';
 
-include '../database.php'; // Koneksi ke database
-$query = "SELECT * FROM jurusan";
-$result = mysqli_query($conn, $query);
+// Ambil data jurusan untuk dropdown
+$jurusan = mysqli_query($koneksi, "SELECT * FROM jurusan");
 
+if (isset($_POST['submit'])) {
+  $tingkat = $_POST['tingkat'];
+  $id_jurusan = $_POST['id_jurusan'];
+  $nomor_kelas = $_POST['nomor_kelas'];
+
+  $query = "INSERT INTO kelas (tingkat, Id_Jurusan, nomor_kelas) VALUES ('$tingkat', '$id_jurusan', '$nomor_kelas')";
+  if (mysqli_query($koneksi, $query)) {
+    header("Location: data-kelas.php?msg=sukses");
+    exit;
+  } else {
+    $error = "Gagal menambah kelas: " . mysqli_error($koneksi);
+  }
+}
 ?>
-
 <!DOCTYPE html>
-<!--
-This is a starter template page. Use this page to start your new project from
-scratch. This page gets rid of all links and provides the needed markup only.
--->
 <html lang="en">
 
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Dashboard</title>
-
-  <!-- Google Font: Source Sans Pro -->
-  <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-  <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="../theme/plugins/fontawesome-free/css/all.min.css">
-  <!-- DataTables -->
-  <link rel="stylesheet" href="../theme/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
-  <link rel="stylesheet" href="../theme/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
-  <link rel="stylesheet" href="../theme/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
-  <!-- Theme style -->
+  <title>Tambah Kelas</title>
   <link rel="stylesheet" href="../theme/dist/css/adminlte.min.css">
-
+  <link rel="stylesheet" href="../theme/plugins/fontawesome-free/css/all.min.css">
 </head>
 
 <body class="hold-transition sidebar-mini">
   <div class="wrapper">
-
     <?php include '../components/navbar.php' ?>
     <?php include '../components/sidebar.php' ?>
-
-    <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
-      <!-- Content Header (Page header) -->
       <div class="content-header">
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6">
               <h1 class="m-0">Tambah Kelas</h1>
-            </div><!-- /.col -->
-            <div class="col-sm-6">
-              <!-- <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item active">Starter Page</li>
-              </ol> -->
-            </div><!-- /.col -->
-          </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
+            </div>
+          </div>
+        </div>
       </div>
-      <!-- /.content-header -->
-
-      <!-- Main content -->
       <div class="content">
         <div class="container-fluid">
-
-            <!-- general form elements -->
-            <div class="card card-primary">
-              <div class="card-header">
-                <h3 class="card-title">Tambah Kelas</h3>
-              </div>
-              <!-- /.card-header -->
-              <!-- form start -->
-              <form action="proses-tambah-kelas.php" method="post">
-                <div class="card-body">
-                  <div class="form-group">
-                    <label for="nama">Nama Kelas</label>
-                    <input type="text" class="form-control" id="nama" name="nama" placeholder="Masukkan nama kelas">
-                  </div>
-                  <div class="form-group">
-                    <label for="jurusan">Pilih Jurusan</label>
-                    <select class="form-control" id="jurusan" name="jurusan" required>
-                      <option value="">-- Pilih Jurusan --</option>
-                      <?php while ($row = mysqli_fetch_assoc($result)) { 
-                        ?>
-                        <option value="<?php echo $row['id']; ?>"><?php echo $row['nama_jurusan']; ?></option>
-                      <?php } ?>  
-                    </select>
-                  </div>
-                  <div class="form-group">
-                    <label>Nomor Kelas</label>
-                    <select class="custom-select">
-                      <option>1</option>
-                      <option>2</option>
-                      <option>3</option>
-                      <option>4</option>
-                      <option>5</option>
-                    </select>
-                  </div>
-                </div>
-                <!-- /.card-body -->
-
-                <div class="card-footer">
-                  <button type="submit" name="submit" class="btn btn-primary">Submit</button>
-                  <a href="data-kelas.php" class="btn btn-default float-right">Cancel</a>                  </div>
-              </form>
+          <div class="card card-primary">
+            <div class="card-header">
+              <h3 class="card-title">Tambah Kelas</h3>
             </div>
-            <!-- /.card -->
+            <form method="post">
+              <div class="card-body">
+                <?php if (isset($error)) echo "<div class='alert alert-danger'>$error</div>"; ?>
+                <div class="form-group">
+                  <label for="tingkat">Tingkat</label>
+                  <select class="form-control" id="tingkat" name="tingkat" required>
+                    <option value="">-- Pilih Tingkat --</option>
+                    <option value="X">X</option>
+                    <option value="XI">XI</option>
+                    <option value="XII">XII</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="id_jurusan">Pilih Jurusan</label>
+                  <select class="form-control" id="id_jurusan" name="id_jurusan" required>
+                    <option value="">-- Pilih Jurusan --</option>
+                    <?php while ($row = mysqli_fetch_assoc($jurusan)) { ?>
+                    <option value="<?= $row['Id_Jurusan']; ?>"><?= $row['nama_jurusan']; ?></option>
+                    <?php } ?>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="nomor_kelas">Nomor Kelas</label>
+                  <select class="form-control" id="nomor_kelas" name="nomor_kelas" required>
+                    <option value="">-- Pilih Nomor --</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                  </select>
+                </div>
+              </div>
+              <div class="card-footer">
+                <button type="submit" name="submit" class="btn btn-primary">Simpan</button>
+                <a href="data-kelas.php" class="btn btn-secondary float-right">Batal</a>
+              </div>
+            </form>
+          </div>
         </div>
-        <!-- /.container-fluid -->
       </div>
-      <!-- /.content -->
     </div>
-    <!-- /.content-wrapper -->
-
-    <!-- Main Footer -->
     <?php include '../components/footer.php' ?>
   </div>
-  <!-- ./wrapper -->
-
-  <!-- REQUIRED SCRIPTS -->
-
-  <!-- jQuery -->
   <script src="../theme/plugins/jquery/jquery.min.js"></script>
-  <!-- Bootstrap 4 -->
   <script src="../theme/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <!-- DataTables  & Plugins -->
-  <script src="../theme/plugins/datatables/jquery.dataTables.min.js"></script>
-  <script src="../theme/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
-  <script src="../theme/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
-  <script src="../theme/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-  <script src="../theme/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
-  <script src="../theme/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
-  <script src="../theme/plugins/jszip/jszip.min.js"></script>
-  <script src="../theme/plugins/pdfmake/pdfmake.min.js"></script>
-  <script src="../theme/plugins/pdfmake/vfs_fonts.js"></script>
-  <script src="../theme/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
-  <script src="../theme/plugins/datatables-buttons/js/buttons.print.min.js"></script>
-  <script src="../theme/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
-  <!-- AdminLTE App -->
   <script src="../theme/dist/js/adminlte.min.js"></script>
-
-  <script>
-    $(function () {
-      $("#example100").DataTable({
-        "responsive": true, "lengthChange": false, "autoWidth": false
-      }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-    });
-  </script>
 </body>
 
 </html>

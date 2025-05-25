@@ -4,6 +4,11 @@ if (!isset($_SESSION['email']) || $_SESSION['role'] != 'siswa') {
   header("Location: login.php");
   exit;
 }
+include '../database.php';
+$id_siswa = $_SESSION['id_siswa'];
+$tanggal = date('Y-m-d');
+$cek = mysqli_query($koneksi, "SELECT * FROM absensi WHERE id_siswa='$id_siswa' AND tanggal_absensi='$tanggal'");
+$absen_status = (mysqli_num_rows($cek) > 0) ? 'sudah' : 'belum';
 ?>
 
 <!DOCTYPE html>

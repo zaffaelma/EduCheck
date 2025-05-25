@@ -7,7 +7,7 @@ if (!isset($_SESSION['email']) || $_SESSION['role'] != 'admin') {
 
 include '../database.php'; 
 $query = "SELECT * FROM jurusan";
-$result = mysqli_query($conn, $query);
+$result = mysqli_query($koneksi, $query);
 
 
 ?>
@@ -104,11 +104,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <?php if (mysqli_num_rows($result) > 0) { ?>
                   <?php while ($row = mysqli_fetch_assoc($result)) { ?>
           <tr>
-            <td><?php echo $row['id']; ?></td>
+            <td><?php echo $row['Id_Jurusan']; ?></td>
             <td><?php echo $row['nama_jurusan']; ?></td>
             <td>
-                <a href="edit-jurusan.php?id=<?php echo $row['id']; ?>" class="btn btn-warning btn-sm">Edit</a>
-                <a href="hapus.php?id=<?php echo $row['id']; ?>&type=jurusan" class="btn btn-danger btn-sm"
+                <a href="edit-jurusan.php?id=<?php echo $row['Id_Jurusan']; ?>" class="btn btn-warning btn-sm">Edit</a>
+                <a href="hapus.php?id=<?php echo $row['Id_Jurusan']; ?>&type=jurusan" class="btn btn-danger btn-sm"
                    onclick="return confirm('Yakin ingin menghapus jurusan ini?')">Hapus</a>
             </td>
           </tr>

@@ -4,6 +4,20 @@ if (!isset($_SESSION['email']) || $_SESSION['role'] != 'guru') {
   header("Location: login.php");
   exit;
 }
+include '../database.php';
+$id_gurubk = $_SESSION['id_gurubk'];
+
+// Ambil data absensi siswa dari kelas yang dikelola guru BK ini
+$query = "
+  SELECT a.tanggal_absensi, s.nama, a.status_absensi
+  FROM absensi a
+  JOIN siswa s ON a.id_siswa = s.Id_Siswa
+  JOIN kelas k ON s.Id_Kelas = k.Id_Kelas
+  JOIN guru_kelas gk ON k.Id_Kelas = gk.Id_Kelas
+  WHERE gk.Id_GuruBK = '$id_gurubk'
+  ORDER BY a.tanggal_absensi DESC
+";
+$result = mysqli_query($koneksi, $query);
 ?>
 
 <!DOCTYPE html>
@@ -96,12 +110,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                        </tr>
+                        <?php
+                        $no = 1;
+                        while ($row = mysqli_fetch_assoc($result)) {
+                            echo "<tr>";
+                            echo "<td>".$no++."</td>";
+                            echo "<td>".$row['tanggal_absensi']."</td>";
+                            echo "<td>".$row['nama']."</td>";
+                            echo "<td>".$row['status_absensi']."</td>";
+                            echo "</tr>";
+                        }
+                        ?>
                       </tbody>
                     </table>
                   </div>

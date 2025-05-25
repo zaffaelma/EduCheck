@@ -19,7 +19,7 @@ if (($status == 'sakit' || $status == 'izin') && isset($_FILES['file']) && $_FIL
 }
 
 // Cek apakah sudah absen hari ini
-$cek = mysqli_query($conn, "SELECT * FROM absensi WHERE id_siswa='$id_siswa' AND tanggal_absensi='$tanggal'");
+$cek = mysqli_query($koneksi, "SELECT * FROM absensi WHERE id_siswa='$id_siswa' AND tanggal_absensi='$tanggal'");
 if (mysqli_num_rows($cek) > 0) {
     $_SESSION['absen_status'] = 'sudah';
     header("Location: dashboard.php");
@@ -29,7 +29,7 @@ if (mysqli_num_rows($cek) > 0) {
 // Simpan ke database
 $query = "INSERT INTO absensi (id_siswa, tanggal_absensi, keterangan_absensi, status_absensi, bukti_absensi)
           VALUES ('$id_siswa', '$tanggal', '$status', '$status', '$bukti')";
-mysqli_query($conn, $query);
+mysqli_query($koneksi, $query);
 
 $_SESSION['absen_status'] = 'sudah';
 header("Location: dashboard.php");

@@ -7,23 +7,8 @@ if (!isset($_SESSION['email']) || $_SESSION['role'] != 'siswa') {
 include '../database.php';
 $id_siswa = $_SESSION['id_siswa'];
 $query = "SELECT * FROM absensi WHERE id_siswa='$id_siswa' ORDER BY tanggal_absensi DESC";
-$result = mysqli_query($conn, $query);
+$result = mysqli_query($koneksi, $query);
 ?>
-
-<!-- ...HTML... -->
-<tbody>
-<?php
-$no = 1;
-while ($row = mysqli_fetch_assoc($result)) {
-    echo "<tr>";
-    echo "<td>".$no++."</td>";
-    echo "<td>".$row['tanggal_absensi']."</td>";
-    echo "<td>".$row['status_absensi']."</td>";
-    echo "</tr>";
-}
-?>
-</tbody>
-<!-- ...HTML... -->
 
 <!DOCTYPE html>
 <!--

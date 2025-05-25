@@ -6,8 +6,11 @@ if (!isset($_SESSION['email']) || $_SESSION['role'] != 'admin') {
 }
 
 include '../database.php'; 
-$query = "SELECT * FROM guru";
-$result = mysqli_query($conn, $query);
+$query = "SELECT * FROM gurubk";
+$result = mysqli_query($koneksi, $query);
+if (!$result) {
+    die("Query error: " . mysqli_error($koneksi));
+}
 
 
 ?>
@@ -97,7 +100,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <tr>
                       <th>NO</th>
                       <th>Nama Guru</th>
-                      <th>Jurusan</th>
                       <th>Email</th>
                       <th>Jenis Kelamin</th>
                       <th>Aksi</th>
@@ -110,12 +112,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
                    <tr>
                      <td><?= $no++; ?></td>
                      <td><?= htmlspecialchars($row['nama']) ?></td>
-                     <td><?= htmlspecialchars($row['jurusan']) ?></td>
                      <td><?= htmlspecialchars($row['email']) ?></td>
                      <td><?= htmlspecialchars($row['jenis_kelamin']) ?></td>
                      <td>
-                        <a href="edit-guru.php?id=<?= $row['id'] ?>" class="btn btn-sm btn-warning">Edit</a>
-                        <a href="hapus.php?id=<?= $row['id'] ?>&type=guru" class="btn btn-sm btn-danger" onclick="return confirm('Hapus guru ini?')">Hapus</a>
+                        <a href="edit-guru.php?id=<?= $row['Id_GuruBK'] ?>" class="btn btn-sm btn-warning">Edit</a>
+                        <a href="hapus.php?id=<?= $row['Id_GuruBK'] ?>&type=guru" class="btn btn-sm btn-danger" onclick="return confirm('Hapus guru ini?')">Hapus</a>
                      </td>
                    </tr>
                  <?php endwhile; ?>

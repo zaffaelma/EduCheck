@@ -1,9 +1,7 @@
 <?php
-include 'database.php';
+$koneksi = mysqli_connect("localhost", "root", "root", "db_educheck");
 
-if ($conn) {
-    echo "Koneksi berhasil!";
-} else {
-    echo "Koneksi gagal!";
+if (!$koneksi) {
+    die("Koneksi database gagal: " . mysqli_connect_error());
 }
 ?>

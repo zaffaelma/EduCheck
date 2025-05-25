@@ -6,11 +6,11 @@ if (!isset($_SESSION['email']) || $_SESSION['role'] != 'admin') {
 }
 
 include '../database.php';
-$query = "SELECT siswa.*, kelas.nama_kelas, jurusan.nama_jurusan 
+$query = "SELECT siswa.*, kelas.tingkat, kelas.nomor_kelas, jurusan.nama_jurusan 
           FROM siswa 
-          JOIN kelas ON siswa.kelas_id = kelas.id 
-          JOIN jurusan ON siswa.jurusan_id = jurusan.id";
-$result = mysqli_query($conn, $query);
+          JOIN kelas ON siswa.Id_Kelas = kelas.Id_Kelas 
+          JOIN jurusan ON siswa.Id_Jurusan = jurusan.Id_Jurusan";
+$result = mysqli_query($koneksi, $query);
 ?>
 
 <!DOCTYPE html>
@@ -106,18 +106,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     </tr>
                   </thead>
                   <tbody>
-                    <?php
-                    $no = 1; while ($row = mysqli_fetch_assoc($result)) { ?>
+                    <?php $no = 1; while ($row = mysqli_fetch_assoc($result)) { ?>
                       <tr>
                         <td><?= $no++; ?></td>
                         <td><?= $row['nis']; ?></td>
-                        <td><?= $row['nama_siswa']; ?></td>
-                        <td><?= $row['nama_kelas']; ?></td>
+                        <td><?= $row['nama']; ?></td>
+                        <td><?= $row['tingkat'].' '.$row['nama_jurusan'].' '.$row['nomor_kelas']; ?></td>
                         <td><?= $row['nama_jurusan']; ?></td>
                         <td><?= $row['email']; ?></td>
                         <td>
-                          <a href="edit-jurusan.php?id=<?php echo $row['id']; ?>" class="btn btn-warning btn-sm">Edit</a>
-                          <a href="hapus.php?id=<?php echo $row['id']; ?>&type=siswa" class="btn btn-danger btn-sm"
+                          <a href="edit-siswa.php?id=<?= $row['Id_Siswa']; ?>" class="btn btn-warning btn-sm">Edit</a>
+                          <a href="hapus.php?id=<?= $row['Id_Siswa']; ?>&type=siswa" class="btn btn-danger btn-sm"
                             onclick="return confirm('Yakin ingin menghapus siswa ini?')">Hapus</a>
                         </td>
                       </tr>

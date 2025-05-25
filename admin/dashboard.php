@@ -4,6 +4,51 @@ if (!isset($_SESSION['email']) || $_SESSION['role'] != 'admin') {
   header("Location: login.php");
   exit;
 }
+
+include '../database.php';
+
+// Query for counting the number of teachers
+$query_guru = mysqli_query($koneksi, "SELECT COUNT(*) AS total_guru FROM gurubk");
+$data_guru = mysqli_fetch_assoc($query_guru);
+
+// Query for counting the number of departments
+$query_jurusan = mysqli_query($koneksi, "SELECT COUNT(*) AS total_jurusan FROM jurusan");
+$data_jurusan = mysqli_fetch_assoc($query_jurusan);
+
+// Query for counting the number of classes
+$query_kelas = mysqli_query($koneksi, "SELECT COUNT(*) AS total_kelas FROM kelas");
+$data_kelas = mysqli_fetch_assoc($query_kelas);
+
+// Query for counting the number of students
+$query_siswa = mysqli_query($koneksi, "SELECT COUNT(*) AS total_siswa FROM siswa");
+$data_siswa = mysqli_fetch_assoc($query_siswa);
+
+$tanggal_hari_ini = date('Y-m-d');
+
+$query_hadir = mysqli_query($koneksi, "SELECT COUNT(*) AS total FROM absensi WHERE status_absensi = 'Hadir'");
+if (!$query_hadir) {
+    die("Query hadir error: " . mysqli_error($koneksi));
+}
+$data_hadir = mysqli_fetch_assoc($query_hadir)['total'];
+
+$query_izin = mysqli_query($koneksi, "SELECT COUNT(*) AS total FROM absensi WHERE status_absensi = 'Izin' AND tanggal_absensi = '$tanggal_hari_ini'");
+if (!$query_izin) {
+    die("Query izin error: " . mysqli_error($koneksi));
+}
+$data_izin = mysqli_fetch_assoc($query_izin)['total'];
+
+$query_sakit = mysqli_query($koneksi, "SELECT COUNT(*) AS total FROM absensi WHERE status_absensi = 'Sakit' AND tanggal_absensi = '$tanggal_hari_ini'");
+if (!$query_sakit) {
+    die("Query sakit error: " . mysqli_error($koneksi));
+}
+$data_sakit = mysqli_fetch_assoc($query_sakit)['total'];
+
+$query_alpha = mysqli_query($koneksi, "SELECT COUNT(*) AS total FROM absensi WHERE status_absensi = 'Alpha' AND tanggal_absensi = '$tanggal_hari_ini'");
+if (!$query_alpha) {
+    die("Query alpha error: " . mysqli_error($koneksi));
+}
+$data_alpha = mysqli_fetch_assoc($query_alpha)['total'];
+
 ?>
 
 <!DOCTYPE html>
@@ -64,58 +109,50 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
         <!-- box -->
         <div class="row">
-          <div class="col-md-3 col-sm-6 col-12">
-            <div class="info-box">
-              <span class="info-box-icon bg-info"><i class="fas fa-user-tie"></i></span>
-
-              <div class="info-box-content">
-                <span class="info-box-text">Jumlah Guru BK</span>
-                <span class="info-box-number">5</span>
+          <div class="col-md-3 mb-3">
+            <div class="card bg-info text-white">
+              <div class="card-body d-flex align-items-center">
+                <i class="fas fa-chalkboard-teacher fa-2x mr-3"></i>
+                <div>
+                  <div>Jumlah Guru</div>
+                  <h4><?= $data_guru['total_guru']; ?></h4>
+                </div>
               </div>
-              <!-- /.info-box-content -->
             </div>
-            <!-- /.info-box -->
           </div>
-          <!-- /.col -->
-          <div class="col-md-3 col-sm-6 col-12">
-            <div class="info-box">
-              <span class="info-box-icon bg-success"><i class="fas fa-school"></i></span>
-
-              <div class="info-box-content">
-                <span class="info-box-text">Jumlah Jurusan</span>
-                <span class="info-box-number">7</span>
+          <div class="col-md-3 mb-3">
+            <div class="card bg-success text-white">
+              <div class="card-body d-flex align-items-center">
+                <i class="fas fa-graduation-cap fa-2x mr-3"></i>
+                <div>
+                  <div>Jumlah Jurusan</div>
+                  <h4><?= $data_jurusan['total_jurusan']; ?></h4>
+                </div>
               </div>
-              <!-- /.info-box-content -->
             </div>
-            <!-- /.info-box -->
           </div>
-          <!-- /.col -->
-          <div class="col-md-3 col-sm-6 col-12">
-            <div class="info-box">
-              <span class="info-box-icon bg-secondary"><i class="fas fa-book"></i></span>
-
-              <div class="info-box-content">
-                <span class="info-box-text">Jumlah Kelas</span>
-                <span class="info-box-number">16</span>
+          <div class="col-md-3 mb-3">
+            <div class="card bg-warning text-white">
+              <div class="card-body d-flex align-items-center">
+                <i class="fas fa-door-open fa-2x mr-3"></i>
+                <div>
+                  <div>Jumlah Kelas</div>
+                  <h4><?= $data_kelas['total_kelas']; ?></h4>
+                </div>
               </div>
-              <!-- /.info-box-content -->
             </div>
-            <!-- /.info-box -->
           </div>
-          <!-- /.col -->
-          <div class="col-md-3 col-sm-6 col-12">
-            <div class="info-box">
-              <span class="info-box-icon bg-primary"><i class="fas fa-user-graduate"></i></span>
-
-              <div class="info-box-content">
-                <span class="info-box-text">Jumlah Siswa</span>
-                <span class="info-box-number">2.500</span>
+          <div class="col-md-3 mb-3">
+            <div class="card bg-danger text-white">
+              <div class="card-body d-flex align-items-center">
+                <i class="fas fa-users fa-2x mr-3"></i>
+                <div>
+                  <div>Jumlah Siswa</div>
+                  <h4><?= $data_siswa['total_siswa']; ?></h4>
+                </div>
               </div>
-              <!-- /.info-box-content -->
             </div>
-            <!-- /.info-box -->
           </div>
-          <!-- /.col -->
         </div>
         <!-- box -->
 
@@ -141,22 +178,22 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <tr>
                       <td>1.</td>
                       <td>Siswa Hadir</td>
-                      <td><span class="badge bg-success">55</span></td>
+                      <td><span class="badge bg-success"><?= $data_hadir ?></span></td>
                     </tr>
                     <tr>
                       <td>2.</td>
                       <td>Izin</td>
-                      <td><span class="badge bg-primary">70</span></td>
+                      <td><span class="badge bg-primary"><?= $data_izin ?></span></td>
                     </tr>
                     <tr>
                       <td>3.</td>
                       <td>Sakit</td>
-                      <td><span class="badge bg-warning">30</span></td>
+                      <td><span class="badge bg-warning"><?= $data_sakit ?></span></td>
                     </tr>
                     <tr>
                       <td>4.</td>
                       <td>Alfa</td>
-                      <td><span class="badge bg-danger">90</span></td>
+                      <td><span class="badge bg-danger"><?= $data_alpha ?></span></td>
                     </tr>
                   </tbody>
                 </table>
@@ -232,6 +269,25 @@ scratch. This page gets rid of all links and provides the needed markup only.
       }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
     });
   </script>
+
+  <script>
+  const pieChartCanvas = document.getElementById('pieChart').getContext('2d');
+  new Chart(pieChartCanvas, {
+    type: 'pie',
+    data: {
+      labels: ['Hadir', 'Izin', 'Sakit', 'Alpha'],
+      datasets: [{
+        data: [<?= $data_hadir ?>, <?= $data_izin ?>, <?= $data_sakit ?>, <?= $data_alpha ?>],
+        backgroundColor: ['#28a745', '#007bff', '#ffc107', '#dc3545']
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false
+    }
+  });
+</script>
+
 </body>
 
 </html>

@@ -6,8 +6,8 @@ if (!isset($_SESSION['email']) || $_SESSION['role'] != 'admin') {
 }
 
 include '../database.php'; 
-$kelas = mysqli_query($conn, "SELECT * FROM kelas");
-$jurusan = mysqli_query($conn, "SELECT * FROM jurusan");
+$kelas = mysqli_query($koneksi, "SELECT * FROM kelas");
+$jurusan = mysqli_query($koneksi, "SELECT * FROM jurusan");
 ?>
 
 <!DOCTYPE html>
@@ -93,17 +93,23 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   </div>
                   <div class="form-group">
                     <label>Kelas</label>
-                    <select name="kelas_id" class="custom-select" required>
-                      <?php while ($k = mysqli_fetch_assoc($kelas)) { ?>
-                      <option value="<?=$k['id'] ?>"><?=$k['nama_kelas']?></option>
+                    <select name="id_kelas" class="custom-select" required>
+                      <option value="">Pilih Kelas</option>
+                      <?php
+                      $kelas = mysqli_query($koneksi, "SELECT kelas.*, jurusan.nama_jurusan FROM kelas JOIN jurusan ON kelas.Id_Jurusan = jurusan.Id_Jurusan");
+                      while ($k = mysqli_fetch_assoc($kelas)) { ?>
+                        <option value="<?= $k['Id_Kelas'] ?>">
+                          <?= $k['tingkat'].' '.$k['nama_jurusan'].' '.$k['nomor_kelas'] ?>
+                        </option>
                       <?php } ?>
                     </select>
                   </div>
                   <div class="form-group">
                     <label>Jurusan</label>
-                    <select name="jurusan_id" class="custom-select" required>
+                    <select name="id_jurusan" class="custom-select" required>
+                      <option value="">Pilih Jurusan</option>
                       <?php while ($j = mysqli_fetch_assoc($jurusan)) { ?>
-                      <option value="<?=$j['id'] ?>"><?=$j['nama_jurusan']?></option>
+                        <option value="<?=$j['Id_Jurusan'] ?>"><?=$j['nama_jurusan']?></option>
                       <?php } ?>
                     </select>
                   </div>

@@ -8,14 +8,18 @@ if (!isset($_SESSION['email']) || $_SESSION['role'] != 'admin') {
 <?php
 include '../database.php';
 $query = "SELECT 
-            kelas.id, 
-            kelas.nama_kelas, 
+            kelas.Id_Kelas, 
+            kelas.tingkat, 
+            kelas.nomor_kelas, 
             jurusan.nama_jurusan,
-            (SELECT COUNT(*) FROM siswa WHERE siswa.kelas_id = kelas.id) AS jumlah_siswa
+            (SELECT COUNT(*) FROM siswa WHERE siswa.Id_Kelas = kelas.Id_Kelas) AS jumlah_siswa
           FROM kelas
-          JOIN jurusan ON kelas.jurusan_id = jurusan.id";
+          JOIN jurusan ON kelas.Id_Jurusan = jurusan.Id_Jurusan";
 
-$result = mysqli_query($conn, $query);
+$result = mysqli_query($koneksi, $query);
+if (!$result) {
+    die("Query error: " . mysqli_error($koneksi));
+}
 $no = 1;
  ?>
 
@@ -115,25 +119,29 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <?php
 include '../database.php';
 $query = "SELECT 
-            kelas.id, 
-            kelas.nama_kelas, 
+            kelas.Id_Kelas, 
+            kelas.tingkat, 
+            kelas.nomor_kelas, 
             jurusan.nama_jurusan,
-            (SELECT COUNT(*) FROM siswa WHERE siswa.kelas_id = kelas.id) AS jumlah_siswa
+            (SELECT COUNT(*) FROM siswa WHERE siswa.Id_Kelas = kelas.Id_Kelas) AS jumlah_siswa
           FROM kelas
-          JOIN jurusan ON kelas.jurusan_id = jurusan.id";
+          JOIN jurusan ON kelas.Id_Jurusan = jurusan.Id_Jurusan";
 
-$result = mysqli_query($conn, $query);
+$result = mysqli_query($koneksi, $query);
+if (!$result) {
+    die("Query error: " . mysqli_error($koneksi));
+}
 $no = 1;
 while ($row = mysqli_fetch_assoc($result)) {
 ?>
 <tr>
   <td><?= $no++; ?></td>
-  <td><?= $row['nama_kelas']; ?></td>
+  <td><?= $row['tingkat'] . ' ' . $row['nama_jurusan'] . ' ' . $row['nomor_kelas']; ?></td>
   <td><?= $row['nama_jurusan']; ?></td>
   <td><?= $row['jumlah_siswa']; ?></td>
   <td>
-    <a href="edit-jurusan.php?id=<?php echo $row['id']; ?>" class="btn btn-warning btn-sm">Edit</a>
-    <a href="hapus.php?id=<?php echo $row['id']; ?>&type=kelas" class="btn btn-danger btn-sm"
+    <a href="edit-kelas.php?id=<?= $row['Id_Kelas']; ?>" class="btn btn-warning btn-sm">Edit</a>
+    <a href="hapus.php?id=<?= $row['Id_Kelas']; ?>&type=kelas" class="btn btn-danger btn-sm"
      onclick="return confirm('Yakin ingin menghapus kelas ini?')">Hapus</a>
   </td>
 </tr>

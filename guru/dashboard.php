@@ -4,6 +4,30 @@ if (!isset($_SESSION['email']) || $_SESSION['role'] != 'guru') {
   header("Location: login.php");
   exit;
 }
+if (!isset($_SESSION['id_gurubk'])) {
+    die("Session id_gurubk belum di-set. Silakan login ulang.");
+}
+$id_gurubk = $_SESSION['id_gurubk'];
+include '../database.php'; 
+
+// Query absensi (kotak statistik)
+$query = "
+    SELECT 
+        SUM(CASE WHEN a.status_absensi = 'Hadir' THEN 1 ELSE 0 END) AS hadir,
+        SUM(CASE WHEN a.status_absensi = 'Sakit' THEN 1 ELSE 0 END) AS sakit,
+        SUM(CASE WHEN a.status_absensi = 'Izin' THEN 1 ELSE 0 END) AS izin,
+        SUM(CASE WHEN a.status_absensi = 'Alfa' THEN 1 ELSE 0 END) AS alfa
+    FROM absensi a
+    JOIN siswa s ON a.id_siswa = s.Id_Siswa
+    JOIN kelas k ON s.Id_Kelas = k.Id_Kelas
+    JOIN guru_kelas gk ON k.Id_Kelas = gk.Id_Kelas
+    WHERE gk.Id_GuruBK = '$id_gurubk'
+";
+$result = mysqli_query($koneksi, $query);
+if (!$result) {
+    die("Query error: " . mysqli_error($koneksi));
+}
+$data = mysqli_fetch_assoc($result);
 ?>
 
 <!DOCTYPE html>
@@ -66,11 +90,32 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
           <!-- Small boxes (Stat box) -->
           <div class="row">
+            <?php
+            $id_guru = $_SESSION['id_gurubk']; // Pastikan session id_guru sudah di-set saat login
+            $query = "
+                SELECT 
+                    SUM(CASE WHEN a.status_absensi = 'Hadir' THEN 1 ELSE 0 END) AS hadir,
+                    SUM(CASE WHEN a.status_absensi = 'Sakit' THEN 1 ELSE 0 END) AS sakit,
+                    SUM(CASE WHEN a.status_absensi = 'Izin' THEN 1 ELSE 0 END) AS izin,
+                    SUM(CASE WHEN a.status_absensi = 'Alfa' THEN 1 ELSE 0 END) AS alfa
+                FROM absensi a
+                JOIN siswa s ON a.id_siswa = s.Id_Siswa
+                JOIN kelas k ON s.Id_Kelas = k.Id_Kelas
+                JOIN guru_kelas gk ON k.Id_Kelas = gk.Id_Kelas
+                WHERE gk.Id_GuruBK = '$id_gurubk'
+            ";
+            $result = mysqli_query($koneksi, $query);
+            if (!$result) {
+                die("Query error: " . mysqli_error($koneksi));
+            }
+            $data = mysqli_fetch_assoc($result);
+            ?>
+
             <div class="col-lg-3 col-6">
               <!-- small box -->
               <div class="small-box bg-primary">
                 <div class="inner">
-                  <h3>1400</h3>
+                  <h3><?= $data['hadir'] ?? 0; ?></h3>
 
                   <p>Hadir</p>
                 </div>
@@ -86,7 +131,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               <!-- small box -->
               <div class="small-box bg-success">
                 <div class="inner">
-                  <h3>53</h3>
+                  <h3><?= $data['sakit'] ?? 0; ?></h3>
 
                   <p>Sakit</p>
                 </div>
@@ -101,7 +146,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               <!-- small box -->
               <div class="small-box bg-info">
                 <div class="inner">
-                  <h3>44</h3>
+                  <h3><?= $data['izin'] ?? 0; ?></h3>
 
                   <p>Izin</p>
                 </div>
@@ -116,7 +161,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               <!-- small box -->
               <div class="small-box bg-danger">
                 <div class="inner">
-                  <h3>16</h3>
+                  <h3><?= $data['alfa'] ?? 0; ?></h3>
 
                   <p>Alfa</p>
                 </div>
@@ -137,9 +182,21 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <label for="kelas">Pilih Kelas:</label>
                 <select class="form-control" id="kelas" name="kelas" required>
                   <option value="">-- Pilih Kelas --</option>
-                  <option value="X" <?php echo (isset($_GET['kelas']) && $_GET['kelas'] == 'X') ? 'selected' : ''; ?>>X</option>
-                  <option value="XI" <?php echo (isset($_GET['kelas']) && $_GET['kelas'] == 'XI') ? 'selected' : ''; ?>>XI</option>
-                  <option value="XII" <?php echo (isset($_GET['kelas']) && $_GET['kelas'] == 'XII') ? 'selected' : ''; ?>>XII</option>
+                  <?php
+                  $kelasQ = mysqli_query($koneksi, "
+                      SELECT k.Id_Kelas, k.tingkat, j.nama_jurusan, k.nomor_kelas 
+                      FROM guru_kelas gk
+                      JOIN kelas k ON gk.Id_Kelas = k.Id_Kelas
+                      JOIN jurusan j ON k.Id_Jurusan = j.Id_Jurusan
+                      WHERE gk.Id_GuruBK = '$id_gurubk'
+                      ORDER BY k.tingkat, j.nama_jurusan, k.nomor_kelas
+                  ");
+                  while ($k = mysqli_fetch_assoc($kelasQ)) {
+                      $label = $k['tingkat'].' '.$k['nama_jurusan'].' '.$k['nomor_kelas'];
+                      $selected = (isset($_GET['kelas']) && $_GET['kelas'] == $k['Id_Kelas']) ? 'selected' : '';
+                      echo "<option value='{$k['Id_Kelas']}' $selected>$label</option>";
+                  }
+                  ?>
                 </select>
               </div>
               <div class="col-md-4">
@@ -173,32 +230,29 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   </thead>
                   <tbody>
                     <?php
-                    // Contoh data dummy (ganti dengan data dari database)
-                    $riwayat = [
-                      ['no' => 1, 'nama' => 'John Doe', 'kelas' => 'X', 'tanggal' => '2025-05-01', 'status' => 'Hadir'],
-                      ['no' => 2, 'nama' => 'Jane Smith', 'kelas' => 'XI', 'tanggal' => '2025-05-02', 'status' => 'Sakit'],
-                      ['no' => 3, 'nama' => 'Alice Johnson', 'kelas' => 'XII', 'tanggal' => '2025-05-03', 'status' => 'Izin'],
-                    ];
-
-                    foreach ($riwayat as $row) {
-                      if ($row['kelas'] == $_GET['kelas'] && $row['tanggal'] == $_GET['tanggal']) {
-                        echo "<tr>";
-                        echo "<td>{$row['no']}</td>";
-                        echo "<td>{$row['nama']}</td>";
-                        echo "<td>{$row['kelas']}</td>";
-                        echo "<td>{$row['tanggal']}</td>";
-                        echo "<td>
-                                <form method='POST' action='update-absensi.php'>
-                                  <input type='hidden' name='id' value='{$row['no']}'>
-                                  <select name='status' class='form-control'>
-                                    <option value='Hadir' " . ($row['status'] == 'Hadir' ? 'selected' : '') . ">Hadir</option>
-                                    <option value='Sakit' " . ($row['status'] == 'Sakit' ? 'selected' : '') . ">Sakit</option>
-                                    <option value='Izin' " . ($row['status'] == 'Izin' ? 'selected' : '') . ">Izin</option>
-                                    <option value='Alfa' " . ($row['status'] == 'Alfa' ? 'selected' : '') . ">Alfa</option>
-                                  </select>
-                              </td>";
-                        echo "<td><button type='submit' class='btn btn-success btn-sm'>Simpan</button></form></td>";
-                        echo "</tr>";
+                    if (isset($_GET['kelas']) && isset($_GET['tanggal'])) {
+                      $id_kelas = $_GET['kelas'];
+                      $tanggal = $_GET['tanggal'];
+                      $query = "SELECT a.id_absensi, s.nama, k.tingkat, j.nama_jurusan, k.nomor_kelas, a.status_absensi
+                                FROM absensi a
+                                JOIN siswa s ON a.id_siswa = s.Id_Siswa
+                                JOIN kelas k ON s.Id_Kelas = k.Id_Kelas
+                                JOIN jurusan j ON k.Id_Jurusan = j.Id_Jurusan
+                                WHERE k.Id_Kelas = '$id_kelas' AND a.tanggal_absensi = '$tanggal'
+                                ORDER BY s.nama";
+                      $result = mysqli_query($koneksi, $query);
+                      $no = 1;
+                      while ($row = mysqli_fetch_assoc($result)) {
+                        $kelasLengkap = $row['tingkat'].' '.$row['nama_jurusan'].' '.$row['nomor_kelas'];
+                        echo "<tr>
+                                <td>$no</td>
+                                <td>{$row['nama']}</td>
+                                <td>{$kelasLengkap}</td>
+                                <td>{$tanggal}</td>
+                                <td>{$row['status_absensi']}</td>
+                                <td>-</td>
+                              </tr>";
+                        $no++;
                       }
                     }
                     ?>

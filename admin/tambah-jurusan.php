@@ -9,14 +9,14 @@ if (!isset($email)){
 if (isset($_POST['submit'])) {
     include '../database.php'; // Koneksi ke database
 
-    $nama_jurusan = mysqli_real_escape_string($conn, $_POST['nama_jurusan']);
+    $nama_jurusan = mysqli_real_escape_string($koneksi, $_POST['nama_jurusan']);
 
     $query = "INSERT INTO jurusan (nama_jurusan) VALUES ('$nama_jurusan')";
-    if (mysqli_query($conn, $query)) {
+    if (mysqli_query($koneksi, $query)) {
       header("Location: data-jurusan.php"); // Redirect ke halaman Data Jurusan
       exit;
     } else {
-      echo "Gagal menambahkan jurusan: " . mysqli_error($conn);
+      echo "Gagal menambahkan jurusan: " . mysqli_error($koneksi);
     }
 }
 if (isset($_POST['submit'])) {
