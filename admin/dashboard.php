@@ -25,30 +25,17 @@ $data_siswa = mysqli_fetch_assoc($query_siswa);
 
 $tanggal_hari_ini = date('Y-m-d');
 
-$query_hadir = mysqli_query($koneksi, "SELECT COUNT(*) AS total FROM absensi WHERE status_absensi = 'Hadir'");
-if (!$query_hadir) {
-    die("Query hadir error: " . mysqli_error($koneksi));
-}
+$query_hadir = mysqli_query($koneksi, "SELECT COUNT(*) AS total FROM absensi WHERE status_absensi = 'Hadir' AND tanggal_absensi = '$tanggal_hari_ini'");
 $data_hadir = mysqli_fetch_assoc($query_hadir)['total'];
 
 $query_izin = mysqli_query($koneksi, "SELECT COUNT(*) AS total FROM absensi WHERE status_absensi = 'Izin' AND tanggal_absensi = '$tanggal_hari_ini'");
-if (!$query_izin) {
-    die("Query izin error: " . mysqli_error($koneksi));
-}
 $data_izin = mysqli_fetch_assoc($query_izin)['total'];
 
 $query_sakit = mysqli_query($koneksi, "SELECT COUNT(*) AS total FROM absensi WHERE status_absensi = 'Sakit' AND tanggal_absensi = '$tanggal_hari_ini'");
-if (!$query_sakit) {
-    die("Query sakit error: " . mysqli_error($koneksi));
-}
 $data_sakit = mysqli_fetch_assoc($query_sakit)['total'];
 
 $query_alpha = mysqli_query($koneksi, "SELECT COUNT(*) AS total FROM absensi WHERE status_absensi = 'Alpha' AND tanggal_absensi = '$tanggal_hari_ini'");
-if (!$query_alpha) {
-    die("Query alpha error: " . mysqli_error($koneksi));
-}
 $data_alpha = mysqli_fetch_assoc($query_alpha)['total'];
-
 ?>
 
 <!DOCTYPE html>
@@ -205,9 +192,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
           <!-- Kolom untuk pie chart -->
           <div class="col-md-6">
-            <div class="card card-danger">
+            <div class="card card-primary">
               <div class="card-header">
-                <h3 class="card-title">Pie Chart</h3>
+                <h3 class="card-title">Pie Chart Kehadiran Siswa Hari Ini</h3>
                 <div class="card-tools">
                   <button type="button" class="btn btn-tool" data-card-widget="collapse">
                     <i class="fas fa-minus"></i>
@@ -218,9 +205,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </div>
               </div>
               <div class="card-body">
-                <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                <div class="chart">
+                  <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                </div>
               </div>
-              <!-- /.card-body -->
             </div>
           </div>
           <!-- /.col -->
@@ -261,6 +249,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <script src="../theme/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
   <!-- AdminLTE App -->
   <script src="../theme/dist/js/adminlte.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <script>
     $(function () {
@@ -283,7 +272,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
     },
     options: {
       responsive: true,
-      maintainAspectRatio: false
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'top',
+        }
+      }
     }
   });
 </script>

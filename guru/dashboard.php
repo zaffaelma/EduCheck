@@ -10,7 +10,12 @@ if (!isset($_SESSION['id_gurubk'])) {
 $id_gurubk = $_SESSION['id_gurubk'];
 include '../database.php'; 
 
-// Query absensi (kotak statistik)
+// Ambil tanggal dan kelas dari GET, default ke hari ini dan kelas pertama jika belum dipilih
+$tanggal = isset($_GET['tanggal']) ? $_GET['tanggal'] : date('Y-m-d');
+$id_kelas = isset($_GET['kelas']) ? $_GET['kelas'] : '';
+
+// Query absensi kotak statistik sesuai filter
+$filter_kelas = $id_kelas ? "AND k.Id_Kelas = '$id_kelas'" : '';
 $query = "
     SELECT 
         SUM(CASE WHEN a.status_absensi = 'Hadir' THEN 1 ELSE 0 END) AS hadir,
@@ -22,6 +27,8 @@ $query = "
     JOIN kelas k ON s.Id_Kelas = k.Id_Kelas
     JOIN guru_kelas gk ON k.Id_Kelas = gk.Id_Kelas
     WHERE gk.Id_GuruBK = '$id_gurubk'
+      AND a.tanggal_absensi = '$tanggal'
+      $filter_kelas
 ";
 $result = mysqli_query($koneksi, $query);
 if (!$result) {
@@ -90,27 +97,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
           <!-- Small boxes (Stat box) -->
           <div class="row">
-            <?php
-            $id_guru = $_SESSION['id_gurubk']; // Pastikan session id_guru sudah di-set saat login
-            $query = "
-                SELECT 
-                    SUM(CASE WHEN a.status_absensi = 'Hadir' THEN 1 ELSE 0 END) AS hadir,
-                    SUM(CASE WHEN a.status_absensi = 'Sakit' THEN 1 ELSE 0 END) AS sakit,
-                    SUM(CASE WHEN a.status_absensi = 'Izin' THEN 1 ELSE 0 END) AS izin,
-                    SUM(CASE WHEN a.status_absensi = 'Alfa' THEN 1 ELSE 0 END) AS alfa
-                FROM absensi a
-                JOIN siswa s ON a.id_siswa = s.Id_Siswa
-                JOIN kelas k ON s.Id_Kelas = k.Id_Kelas
-                JOIN guru_kelas gk ON k.Id_Kelas = gk.Id_Kelas
-                WHERE gk.Id_GuruBK = '$id_gurubk'
-            ";
-            $result = mysqli_query($koneksi, $query);
-            if (!$result) {
-                die("Query error: " . mysqli_error($koneksi));
-            }
-            $data = mysqli_fetch_assoc($result);
-            ?>
-
             <div class="col-lg-3 col-6">
               <!-- small box -->
               <div class="small-box bg-primary">
@@ -123,7 +109,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <div class="icon">
                   <i class="fas fa-school"></i>
                 </div>
-                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
               </div>
             </div>
             <!-- ./col -->
@@ -138,7 +123,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <div class="icon">
                   <i class="fas fa-stethoscope"></i>
                 </div>
-                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
               </div>
             </div>
             <!-- ./col -->
@@ -153,7 +137,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <div class="icon">
                   <i class="fas fa-envelope"></i>
                 </div>
-                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
               </div>
             </div>
             <!-- ./col -->
@@ -168,7 +151,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <div class="icon">
                   <i class="fas fa-user-minus"></i>
                 </div>
-                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
               </div>
             </div>
             <!-- ./col -->

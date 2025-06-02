@@ -6,10 +6,24 @@ if (!isset($_SESSION['email']) || $_SESSION['role'] != 'admin') {
 }
 
 include '../database.php';
-$query = "SELECT siswa.*, kelas.tingkat, kelas.nomor_kelas, jurusan.nama_jurusan 
-          FROM siswa 
-          JOIN kelas ON siswa.Id_Kelas = kelas.Id_Kelas 
-          JOIN jurusan ON siswa.Id_Jurusan = jurusan.Id_Jurusan";
+
+// Ambil daftar kelas untuk dropdown
+$kelas_query = "SELECT Id_Kelas, tingkat, nomor_kelas, nama_jurusan FROM kelas JOIN jurusan ON kelas.Id_Jurusan = jurusan.Id_Jurusan";
+$kelas_result = mysqli_query($koneksi, $kelas_query);
+
+// Filter kelas
+$id_kelas = isset($_GET['kelas']) ? intval($_GET['kelas']) : 0;
+
+// Query untuk mengambil data siswa berdasarkan kelas
+$query = "
+  SELECT siswa.*, kelas.tingkat, kelas.nomor_kelas, jurusan.nama_jurusan 
+  FROM siswa 
+  JOIN kelas ON siswa.Id_Kelas = kelas.Id_Kelas 
+  JOIN jurusan ON siswa.Id_Jurusan = jurusan.Id_Jurusan
+";
+if ($id_kelas > 0) {
+  $query .= " WHERE siswa.Id_Kelas = $id_kelas";
+}
 $result = mysqli_query($koneksi, $query);
 ?>
 
@@ -33,17 +47,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <!-- DataTables -->
   <link rel="stylesheet" href="../theme/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
   <link rel="stylesheet" href="../theme/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
-  <link rel="stylesheet" href="../theme/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="../theme/dist/css/adminlte.min.css">
-
 </head>
 
 <body class="hold-transition sidebar-mini">
   <div class="wrapper">
 
-  <?php include '../components/navbar.php' ?>
-  <?php include '../components/sidebar.php' ?>
+    <?php include '../components/navbar.php' ?>
+    <?php include '../components/sidebar.php' ?>
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
@@ -53,126 +65,92 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <div class="row mb-2">
             <div class="col-sm-6">
               <h1 class="m-0">Data Siswa</h1>
-            </div><!-- /.col -->
+            </div>
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
                 <td>
                   <a href="../admin/tambah-siswa.php" class="btn btn-primary">Tambah</a>
                 </td>
               </ol>
-            </div><!-- /.col -->
-          </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
+            </div>
+          </div>
+        </div>
       </div>
       <!-- /.content-header -->
 
       <!-- Main content -->
       <div class="content">
         <div class="container-fluid">
-
           <div class="card">
-            <!-- /.card-header -->
-            <!-- /.row -->
-        <div class="row">
-          <div class="col-12">
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">Data Siswa</h3>
-
-                <div class="card-tools">
-                  <div class="input-group input-group-sm" style="width: 150px;">
-                    <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
-
-                    <div class="input-group-append">
-                      <button type="submit" class="btn btn-default">
-                        <i class="fas fa-search"></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body table-responsive p-0" style="height: 300px;">
-                <table class="table table-head-fixed text-nowrap">
-                  <thead>
-                    <tr>
-                      <th>NO</th>
-                      <th>NIS</th>
-                      <th>Nama</th>
-                      <th>Kelas</th>
-                      <th>Jurusan</th>
-                      <th>Email</th>
-                      <th>Aksi</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <?php $no = 1; while ($row = mysqli_fetch_assoc($result)) { ?>
-                      <tr>
-                        <td><?= $no++; ?></td>
-                        <td><?= $row['nis']; ?></td>
-                        <td><?= $row['nama']; ?></td>
-                        <td><?= $row['tingkat'].' '.$row['nama_jurusan'].' '.$row['nomor_kelas']; ?></td>
-                        <td><?= $row['nama_jurusan']; ?></td>
-                        <td><?= $row['email']; ?></td>
-                        <td>
-                          <a href="edit-siswa.php?id=<?= $row['Id_Siswa']; ?>" class="btn btn-warning btn-sm">Edit</a>
-                          <a href="hapus.php?id=<?= $row['Id_Siswa']; ?>&type=siswa" class="btn btn-danger btn-sm"
-                            onclick="return confirm('Yakin ingin menghapus siswa ini?')">Hapus</a>
-                        </td>
-                      </tr>
+            <div class="card-header">
+              <h3 class="card-title">Data Siswa</h3>
+              <div class="card-tools">
+                <!-- Dropdown untuk memilih kelas -->
+                <form method="GET" action="data-siswa.php">
+                  <select name="kelas" class="form-control" onchange="this.form.submit()">
+                    <option value="0">Semua Kelas</option>
+                    <?php while ($kelas = mysqli_fetch_assoc($kelas_result)) { ?>
+                      <option value="<?= $kelas['Id_Kelas'] ?>" <?= $id_kelas == $kelas['Id_Kelas'] ? 'selected' : '' ?>>
+                        <?= $kelas['tingkat'] . ' ' . $kelas['nama_jurusan'] . ' ' . $kelas['nomor_kelas'] ?>
+                      </option>
                     <?php } ?>
-                  </tbody>
-                </table>
+                  </select>
+                </form>
               </div>
-              <!-- /.card-body -->
             </div>
-            <!-- /.card -->
-          </div>
-        </div>
+            <!-- /.card-header -->
+            <div class="card-body table-responsive p-0" style="height: 300px;">
+              <table class="table table-head-fixed text-nowrap">
+                <thead>
+                  <tr>
+                    <th>NO</th>
+                    <th>NIS</th>
+                    <th>Nama</th>
+                    <th>Kelas</th>
+                    <th>Jurusan</th>
+                    <th>Email</th>
+                    <th>Aksi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php $no = 1; while ($row = mysqli_fetch_assoc($result)) { ?>
+                    <tr>
+                      <td><?= $no++; ?></td>
+                      <td><?= $row['nis']; ?></td>
+                      <td><?= $row['nama']; ?></td>
+                      <td><?= $row['tingkat'] . ' ' . $row['nama_jurusan'] . ' ' . $row['nomor_kelas']; ?></td>
+                      <td><?= $row['nama_jurusan']; ?></td>
+                      <td><?= $row['email']; ?></td>
+                      <td>
+                        <a href="edit-siswa.php?id=<?= $row['Id_Siswa']; ?>" class="btn btn-warning btn-sm">Edit</a>
+                        <a href="hapus.php?id=<?= $row['Id_Siswa']; ?>&type=siswa" class="btn btn-danger btn-sm"
+                          onclick="return confirm('Yakin ingin menghapus siswa ini?')">Hapus</a>
+                      </td>
+                    </tr>
+                  <?php } ?>
+                </tbody>
+              </table>
+            </div>
             <!-- /.card-body -->
           </div>
-
-          <!-- /.row -->
-        </div><!-- /.container-fluid -->
+        </div>
       </div>
       <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
 
-    <!-- Main Footer -->
     <?php include '../components/footer.php' ?>
   </div>
   <!-- ./wrapper -->
 
   <!-- REQUIRED SCRIPTS -->
-
-  <!-- jQuery -->
   <script src="../theme/plugins/jquery/jquery.min.js"></script>
-  <!-- Bootstrap 4 -->
   <script src="../theme/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <!-- DataTables  & Plugins -->
   <script src="../theme/plugins/datatables/jquery.dataTables.min.js"></script>
   <script src="../theme/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
   <script src="../theme/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
   <script src="../theme/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-  <script src="../theme/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
-  <script src="../theme/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
-  <script src="../theme/plugins/jszip/jszip.min.js"></script>
-  <script src="../theme/plugins/pdfmake/pdfmake.min.js"></script>
-  <script src="../theme/plugins/pdfmake/vfs_fonts.js"></script>
-  <script src="../theme/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
-  <script src="../theme/plugins/datatables-buttons/js/buttons.print.min.js"></script>
-  <script src="../theme/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
-  <!-- AdminLTE App -->
   <script src="../theme/dist/js/adminlte.min.js"></script>
-
-  <script>
-    $(function () {
-      $("#example100").DataTable({
-        "responsive": true, "lengthChange": false, "autoWidth": false
-      }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-    });
-  </script>
 </body>
 
 </html>

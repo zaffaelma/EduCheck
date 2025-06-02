@@ -63,12 +63,6 @@ $email = isset($_SESSION['email']) ? $_SESSION['email'] : 'Guest';
                     </a>
                     </li>
                     <li class="nav-item">
-                    <a href="../admin/riwayat-presensi.php" class="nav-link">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p>Riwayat Presensi</p>
-                    </a>
-                    </li>
-                    <li class="nav-item">
                     <a href="../admin/data-guru.php" class="nav-link">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Data Guru</p>
