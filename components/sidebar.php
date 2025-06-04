@@ -169,7 +169,7 @@ $email = isset($_SESSION['email']) ? $_SESSION['email'] : 'Guest';
             <?php endif; ?>
 
             <li class="nav-item">
-              <a href="logout.php" class="nav-link">
+              <a href="../logout.php" class="nav-link">
                 <i class="nav-icon fas fa-th"></i>
                 <p>
                   Logout Here
