@@ -207,7 +207,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       <th>Kelas</th>
                       <th>Tanggal</th>
                       <th>Status</th>
-                      <th>Aksi</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -232,7 +231,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 <td>{$kelasLengkap}</td>
                                 <td>{$tanggal}</td>
                                 <td>{$row['status_absensi']}</td>
-                                <td>-</td>
                               </tr>";
                         $no++;
                       }
