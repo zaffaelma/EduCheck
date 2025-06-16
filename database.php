@@ -1,7 +1,7 @@
 <?php
 $host = "localhost"; 
 $user = "root";      
-$pass = "root";          
+$pass = "";          
 $db   = "db_educheck";  
 
 // Membuat koneksi
